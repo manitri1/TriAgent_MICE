@@ -36,7 +36,8 @@ Pitfalls and fixes (learned from sessions)
 - Save paths and filenames explicitly in responses. Use absolute workspace paths when writing files (agent's working dir: /opt/data).
 
 Templates & support files
-- This skill includes references and templates under `references/` and `templates/` (see linked files). After creation the agent may add session-specific items to `references/`.
+- This skill includes references and templates under `references/` and `templates/` (see linked files).
+- Session recipe: `references/pohang-mice-case.md` — WSL/Windows path handling, workspace recipes, serve & archive commands (practical notes from a Pohang MICE Academy planning session). After creation the agent may add session-specific items to `references/`.
 
 Example quick workflow
 1. Gather core facts (title, date, place, targets, budget). If any missing, ask only the minimal question.
