@@ -1,0 +1,56 @@
+# Hermes Agent — TriAgent_MICE 배포용 docker-compose.yml
+#
+# `HermesSMBStaff`/`HermesMICEAgents`/`TriAgent_Planner`에서 실제로 검증한 구조를 그대로
+# 재사용한다:
+#   - ./.hermes → /opt/data : HERMES_HOME. config.yaml, profiles/<role>/(SOUL.md, USER.md,
+#     MEMORY.md, skills/), workspace/{proposals,budget,outreach,reports}가 모두 여기 위치한다.
+#   - `.hermes/`는 이 저장소가 E:/work/Hermes/TriAgent_MICE에 있으므로 bind mount만으로
+#     데이터가 물리적으로 E:에 남는다 — named volume(Docker 내부 VM 디스크)을 쓰지 않는 이유다
+#     (docs/08-docker-deployment.md 참고).
+#   - working_dir을 /opt/data(= HERMES_HOME 루트)로 고정한다. 우리 SOUL.md/SKILL.md는
+#     "workspace/proposals/<event>/..."처럼 HERMES_HOME 기준 상대경로로 산출물을 지시한다.
+#   - 포트 8648/9125는 e:/work/Hermes/ 아래 형제 프로젝트(HermesMICEAgents=8642/9119,
+#     HermesSMBStaff=8643/9120, HermesLandAssetAgent=8742/9219, TriAgent_Planner=8644/9121,
+#     TriAgent_ContentCreator=8647/9124 등)가 이미 쓰는 포트와 겹치지 않도록 실측 조사해
+#     고른 값이다 (docs/08-docker-deployment.md 조사 결과).
+#   - ⚠️ 컨테이너명은 `hermes-mice*`가 아니라 `hermes-triagent-mice*`로 짓는다 — 기존
+#     `HermesMICEAgents`(포트 8642/9119, 컨테이너명 `hermes-mice*`)와는 이름만 비슷한 별개
+#     프로젝트이므로 `docker ps`에서 혼동하지 않도록 명시적으로 구분한다.
+#   - hermes 서비스는 베이스 이미지를 그대로 쓰지 않고 ./Dockerfile로 빌드한다 —
+#     proposal-agent/postevent-analyst의 browser 툴셋(Playwright/Chromium)을 이미지 레이어에
+#     포함시켜, 컨테이너를 재생성해도 사라지지 않게 하기 위함이다. 베이스 이미지가 갱신되면
+#     `docker compose build hermes`로 재빌드해야 한다. dashboard는 browser를 쓰지 않으므로
+#     베이스 이미지를 그대로 쓴다.
+
+name: hermes-triagent-mice
+
+services:
+  hermes:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hermes-triagent-mice-agent:with-playwright
+    container_name: hermes-triagent-mice
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    working_dir: /opt/data
+    ports:
+      - "8648:8642"   # 8642/8643/8644/8647/8742는 형제 프로젝트가 이미 사용 중
+    volumes:
+      - ./.hermes:/opt/data
+    # 모델 인증: `.hermes/.env`(커밋 대상 아님, `.hermes/.env.example` 참고)에
+    # OPENAI_API_KEY=를 채우면 Hermes Agent CLI가 $HERMES_HOME/.env를 직접 읽는다 —
+    # 이 compose 파일에 environment:/env_file:을 별도로 추가할 필요가 없다.
+
+  dashboard:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes-triagent-mice-dashboard
+    restart: unless-stopped
+    depends_on:
+      - hermes
+    volumes:
+      - ./.hermes:/opt/data
+    ports:
+      - "127.0.0.1:9125:9119"   # 대시보드는 API 키를 다루므로 localhost에만 바인딩
+                                  # (9119/9120/9121/9124/9219도 형제 프로젝트가 이미 사용 중)
+    command: ["dashboard", "--host", "127.0.0.1", "--no-open"]

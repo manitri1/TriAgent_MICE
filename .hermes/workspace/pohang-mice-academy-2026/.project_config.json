@@ -1,0 +1,17 @@
+{
+  "project": "pohang-mice-academy-2026",
+  "root": "/opt/data/workspace/pohang-mice-academy-2026",
+  "created": "2026-07-27",
+  "contacts": {
+    "pm": "[이름]",
+    "email": "example@pohang.kr",
+    "phone": "000-0000-0000"
+  },
+  "paths": {
+    "docs": "docs",
+    "marketing": "marketing",
+    "operations": "operations",
+    "assets": "assets",
+    "templates": "templates"
+  }
+}

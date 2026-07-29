@@ -1,0 +1,16 @@
+model:
+  default: gpt-5-mini
+  provider: openai-api
+display:
+  tool_progress: all
+agent:
+  verify_on_stop: false
+plugins:
+  enabled: []
+_config_version: 33
+platforms:
+  webhook:
+    enabled: false
+onboarding:
+  seen:
+    busy_input_prompt: true

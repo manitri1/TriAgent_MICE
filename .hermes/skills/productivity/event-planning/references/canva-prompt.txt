@@ -1,0 +1,15 @@
+16:9 presentation, Korean language, modern clean layout, minimal icons, primary color ocean blue (#0B72B9), accent coral (#FF6B6B), neutral sand background (#F4E7D3). Use Noto Sans KR for headings and body. Include place for logo top-left. Use wide margins, large headings, iconography for sections (calendar, megaphone, budget, microphone, camera). Visual mood: community, local tourism, approachable professional. 12 slides.
+
+Slide-level prompts (short):
+1. Title slide: large centered title in ocean blue, subtitle smaller, date & venue below. Background: faded photo of the local coastline.
+2. KPI summary: two-column layout, left KPIs (participants/forms), right budget summary box.
+3. Objectives: three icon row (discovery, network, promotion).
+4. Timeline: horizontal 5-step timeline.
+5. Agenda: vertical schedule blocks with times.
+6. Recruitment & channels: grid icons + QR CTA.
+7. Judging & awards: pie chart of criteria.
+8. Budget: table + allocation bars.
+9. Venue & equipment checklist: checklist icons with sand background.
+10. Recording & outputs: thumbnails + delivery timeline.
+11. Risks & responses: two columns red/green.
+12. Next steps & contacts: action checklist + contact box.

@@ -1,0 +1,1 @@
+{"gateway_state":"running","desired_state":"running","timestamp":1785135965,"migrated_from":"legacy-container-cmd","updated_at":"2026-07-27T12:22:54.391245+00:00","platforms":{},"kind":"hermes-gateway","pid":193,"argv":["/opt/hermes/.venv/bin/hermes","gateway","run","--replace"],"start_time":2009,"exit_reason":null,"restart_requested":false,"active_agents":0}

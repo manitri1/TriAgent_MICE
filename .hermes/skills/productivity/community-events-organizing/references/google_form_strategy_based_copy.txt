@@ -1,0 +1,27 @@
+Google Form admin copy (strategy-focused)
+
+Form title:
+Pohang MICE Academy  Strategy Idea Submission
+
+Description:
+Submit a strategy-aligned idea that connects local assets to visitor experiences. Keep answers concise: one-line mission (<=50 chars), problem & proposed solution (200-300 chars each). Deadline: 2026-10-20 23:59.
+
+Questions & help text (admin copy):
+- Project / Idea Name (50 chars): Title of the idea.
+- Team name (or Individual): Team or lead name.
+- Lead contact email: Notifications will go here.
+- One-line mission (<=50 chars): Quick hook.
+- Problem statement (200-300 chars): Who suffers and why?
+- Proposed solution & experience (200-300 chars): What will visitors experience?
+- Estimated budget (KRW): High-level estimate.
+- Timeline (months): Months to pilot.
+- Technical needs: AV/power/other.
+- Files: Proposal upload (PDF/PPT, 10MB) or public link.
+- Consent: promotional use (Yes/No).
+- Mentorship interest (Yes/No/Maybe).
+- Submission confirmation: originality & terms checkbox.
+
+Admin notes:
+- Collect email addresses and route responses to a Google Sheet titled 'Pohang MICE Academy - Submissions'.
+- Set notification rules in the sheet (email on form submit).
+- Use a secondary column in Sheet to compute weighted score from judge inputs.

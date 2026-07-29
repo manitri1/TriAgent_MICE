@@ -1,0 +1,17 @@
+16:9 presentation, Korean language, modern clean layout, minimal icons, primary color ocean blue (#0B72B9), accent coral (#FF6B6B), neutral sand background (#F4E7D3). Use Noto Sans KR for headings and body. Include place for logo top-left. Use wide margins, large headings, iconography for sections (calendar, megaphone, budget, microphone, camera). Visual mood: community, local tourism, approachable professional. 12 slides. 
+
+Slide instructions (short):
+1) Title slide: large centered title, subtitle, date & venue, background: Pohang coastline or abstract wave. Logo top-left.
+2) One-slide KPIs: participants / submissions / budget.
+3) Purpose & impact: 3-icon row.
+4) Timeline: horizontal milestones.
+5) Program schedule: vertical blocks.
+6) Recruitment channels: grid with QR CTA.
+7) Judging & awards: chart for scoring weights.
+8) Budget summary: pie/bar of allocations.
+9) AV checklist: icons for mic/projector/cables.
+10) Media & follow-up: thumbnails and delivery timeline.
+11) Risks & mitigations: two-column layout.
+12) Next steps & contacts: CTA and contact info.
+
+Notes: leave QR placeholder and registration button area on slides for quick edits.

@@ -1,0 +1,27 @@
+# Hermes Agent 런타임/캐시/비밀정보 — 소스 오브 트루스가 아님
+.hermes/.env
+.hermes/profiles/*/.env
+.hermes/**/cache/
+.hermes/**/.cache/
+.hermes/**/.config/
+.hermes/**/.local/
+.hermes/**/lazy-packages/
+.hermes/**/audio_cache/
+.hermes/**/image_cache/
+.hermes/**/sandboxes/
+.hermes/**/sessions/
+.hermes/**/state.db
+.hermes/**/state.db-shm
+.hermes/**/state.db-wal
+.hermes/**/auth.json
+.hermes/**/auth.lock
+.hermes/**/*.log
+.hermes/**/pairing/
+.hermes/**/cron/
+.hermes/**/hooks/
+.hermes/bin/
+.hermes/logs/
+.hermes/.hermes_history
+.hermes/pastes/
+.hermes/memories/
+.hermes/state/

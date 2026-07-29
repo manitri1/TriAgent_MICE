@@ -1,0 +1,17 @@
+16:9 presentation (single poster + social assets), Korean, modern & local-tourism mood. Primary color ocean blue #0B72B9, accent coral #FF6B6B, neutral sand #F4E7D3. Use Noto Sans KR for headings, Nanum Gothic for body. Clean layout, generous white space, bold headline. Include space for logo top-left and QR code bottom-right. Provide A3 print-safe export and social-optimized sizes.
+
+Design assets to produce:
+- A3 poster (print): 297mm x 420mm, bleed 3mm. Include headline + subhead + date/time + venue + CTA QR + registration deadline + contact. Use large hero image of Pohang coastline (waning sunlight), overlay gradient for headline legibility.
+- Instagram square (1080x1080): Crop A3 layout into square-friendly composition. Keep headline short.
+- Instagram story (1080x1920): Vertical, three-frame flow: 1) Title + hero photo, 2) Key details + deadline + QR, 3) CTA and registration link.
+
+Copy placement guide:
+- Headline (H1): top center (big, 60-80pt for A3). "포항 지역 콘텐츠 발굴 콘테스트"
+- Subhead (H2): below headline (bold, 28-36pt): "지역 관광지 발굴 아이디어 공모전"
+- Date/Time & Venue block: middle-left (20-24pt): "2026.11.03(화) 18:00 · 파랑뜰 2층"
+- CTA/QR block: bottom-right, clear white box with QR + short CTA: "지금 접수하기 →" + QR + short URL
+- Footer: sponsor logos left, contact & deadline right.
+
+Export settings:
+- A3 print: PDF/X-1a or high-res PDF, 300dpi raster assets, CMYK if printing.
+- Social: PNG 1080x1080 (square), PNG 1080x1920 (story), sRGB.

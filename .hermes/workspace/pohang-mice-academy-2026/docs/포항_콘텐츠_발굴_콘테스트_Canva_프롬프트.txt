@@ -1,0 +1,33 @@
+전체 Canva 스타일 프롬프트:
+
+"16:9 presentation, Korean language, modern clean layout, minimal icons, primary color ocean blue (#0B72B9), accent coral (#FF6B6B), neutral sand background (#F4E7D3). Use Noto Sans KR for headings and body. Include place for logo top-left. Use wide margins, large headings, iconography for sections (calendar, megaphone, budget, microphone, camera). Visual mood: community, local tourism, approachable professional. 12 slides."
+
+슬라이드별 지시(복사해 Canva의 '디자인 요청' 또는 슬라이드 설명에 붙여넣기):
+
+1) 표지: Large centered title in ocean blue, subtitle smaller, date & venue below. Background: faded photo of Pohang coastline (or abstract wave pattern). Logo placeholder top-left. Clean, bold heading, Noto Sans KR.
+
+2) 한눈에 보기: Two-column layout: left = KPIs (icons for people, form), right = budget summary box. Use coral accent for KPI numbers.
+
+3) 목적 & 기대효과: 3-icon horizontal row (magnifier, network, megaphone). Short captions beneath icons.
+
+4) 전체 일정(마일스톤): Horizontal timeline with 5 milestone dots, icons for each milestone. Use ocean blue line and coral highlights.
+
+5) 프로그램(식순) 초안: Vertical schedule blocks with time labels. Use alternating sand and white blocks for readability. Small clock icons.
+
+6) 참가 모집 & 홍보 계획: Grid of channel icons (form, university, SNS). Include '등록 바로가기' CTA button placeholder and QR code box.
+
+7) 심사·시상 안내: Pie chart or bar chart showing weighting. Use coral for largest share.
+
+8) 예산 요약(현황): Two-column layout: left = numeric summary, right = bar chart or color-coded budget allocation. Use neat table.
+
+9) 장비·현장 운영 체크리스트: Checklist layout with icons for microphone, projector, cable. Use sand background for check area.
+
+10) 현장 기록·콘텐츠 활용 계획: Image grid of sample thumbnails, camera icon, delivery timeline 1-2 weeks.
+
+11) 리스크 & 대응: Two-column: left risks as red bullet list, right 대응책 as green bullets. Use warning icon.
+
+12) 다음 단계 & 담당자: Contact + action checklist. Emphasize CTA: '다음 회의: YYYY.MM.DD' (플레이스홀더).
+
+사용 팁:
+- 각 슬라이드의 텍스트는 포항_콘텐츠_발굴_콘테스트_기획안.md 파일의 슬라이드별 내용을 복사해 붙여넣으세요.
+- QR 코드/CTA는 접수폼 URL이 확정되면 대체하세요.
