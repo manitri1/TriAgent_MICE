@@ -20,6 +20,7 @@ outreach-agent / onsite-ops-agent / postevent-analyst) 기반 MICE 자동화 시
 | [09-users-guide.md](09-users-guide.md) | 실행/운영 가이드 (챗 중심) — 프로필별 대화 진입점, 흔한 함정, 트러블슈팅 |
 | [10-usecase-tests.md](10-usecase-tests.md) | Usecase 테스트 목록 (챗 중심) — 현재는 전부 미검증(⬜) 상태 |
 | [11-usecase-tests-pohang-mice-academy.md](11-usecase-tests-pohang-mice-academy.md) | 실제 프로젝트(`.hermes/workspace/inputs/포항 마이스아카데미 프로젝트 행사 계획.pdf`) 데이터를 사용한 별도 유스케이스 테스트 — 에이전트별 입력/출력 확인 체크리스트 포함 |
+| [12-hostinger-vps-deployment.md](12-hostinger-vps-deployment.md) | Hostinger VPS(hPanel) 배포 — 로컬 Windows 인스턴스를 Docker로 상시 운영 서버로 이관하는 절차 (git clone + rsync로 런타임 데이터 이관, SSH 터널 대시보드 접근) |
 
 ## 한 줄 요약
 
