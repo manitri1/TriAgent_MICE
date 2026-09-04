@@ -1,0 +1,4 @@
+/opt/data/pohang-mice-academy-networking-day/outputs/
+*.tar.gz
+*.log
+.DS_Store

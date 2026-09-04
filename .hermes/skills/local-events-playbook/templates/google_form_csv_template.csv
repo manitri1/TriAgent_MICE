@@ -1,0 +1,10 @@
+Question Title,Type,Required,Options,Help Text
+출품자 이름,Short answer,TRUE,,예: 홍길동 / OO대학 00학과
+이메일,Short answer,TRUE,,연락 가능한 이메일
+연락처,Short answer,TRUE,,휴대전화(예: 010-1234-5678)
+소속/Affiliation,Short answer,FALSE,,회사/대학/단체
+아이디어 제목,Short answer,TRUE,,아이디어 이름
+아이디어 요약,Paragraph,TRUE,,3~5줄 요약(목표·핵심·기대효과)
+세부 설명,Paragraph,TRUE,,구현 계획/운영 방식(최대 500자)
+첨부(발표자료),File upload,FALSE,,발표자료(PDF/PPT), 최대 50MB
+저작권/초상권 동의,Multiple choice,TRUE,"동의: 출품자는 원저작자이며, 제3자 권리 없음; 비동의: 제3자 권리 포함","제출자는 저작권 보증 및 초상권 동의 여부를 표기합니다."

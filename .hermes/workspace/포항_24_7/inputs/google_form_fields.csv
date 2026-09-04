@@ -1,0 +1,14 @@
+Question Title,Type,Required,Options,Help Text
+팀/개인 이름,Short answer,TRUE,,예: 홍길동 / OO대학교 00학과
+이메일,Short answer,TRUE,,연락 가능한 이메일
+연락처,Short answer,TRUE,,휴대전화(예: 010-1234-5678)
+소속/Affiliation,Short answer,FALSE,,회사/학교/단체
+아이디어 제목,Short answer,TRUE,,아이디어 이름(한글/영문)
+아이디어 요약,Paragraph,TRUE,,3~5줄 요약(핵심 목적·대상·효과)
+세부 설명,Paragraph,TRUE,,세부 구현 계획/콘텐츠 구성(최대 500자 권장)
+파일 업로드,File upload,FALSE,,발표자료(PDF/PPT) 또는 이미지(최대 50MB 권장)
+저작권/권리 보증,Multiple choice,TRUE,"예: 예(본인 창작물), 아니오(타인 권리 있음)",출품자는 저작권자이거나 정당한 사용권 보유를 보증합니다.
+제3자 저작물 사용 여부,Multiple choice,TRUE,"예,아니오","예인 경우 허가서 업로드 필수"
+초상권 동의,Multiple choice,TRUE,"동의,동의안함","행사 사진·영상 홍보 활용에 대한 동의"
+수상시 후속연락 및 활용동의,Multiple choice,TRUE,"동의,동의안함","수상작은 홍보·편집용으로 활용될 수 있습니다"
+기타 요청사항,Paragraph,FALSE,,심사·발표 관련 특이사항 기입

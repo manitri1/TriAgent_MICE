@@ -1,0 +1,20 @@
+/* styles.css - 간단한 반응형 스타일 */
+:root{--bg:#f7fbff;--card:#ffffff;--accent:#0077b6;--muted:#666}
+*{box-sizing:border-box}
+body{font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; color:#222; background:var(--bg)}
+.container{max-width:880px;margin:0 auto;padding:20px}
+.site-header{background:linear-gradient(90deg,#e6f7ff, #ffffff);border-bottom:1px solid #e6eef5}
+.site-header .container{padding:24px 20px}
+.site-header h1{margin:0;font-size:1.6rem;color:var(--accent)}
+.kicker{margin:6px 0 0;color:var(--muted)}
+.main-card{margin-top:18px}
+.summary, .cta, .info{background:var(--card);padding:18px;border-radius:8px;box-shadow:0 6px 18px rgba(20,40,80,0.04);margin-bottom:14px}
+.summary h2,.cta h2{margin-top:0}
+.cta .btn{display:inline-block;padding:12px 20px;background:var(--accent);color:#fff;border-radius:6px;text-decoration:none;font-weight:600}
+.note{color:var(--muted);font-size:0.95rem}
+.small{font-size:0.85rem;color:var(--muted)}
+.embed-area{margin-top:12px}
+.qr{margin-top:12px;border-top:1px dashed #eee;padding-top:12px}
+.site-footer{padding:14px 0;text-align:center;color:var(--muted);font-size:0.9rem}
+@media(min-width:900px){.site-header h1{font-size:2rem}}
+@media(max-width:520px){.container{padding:12px}.cta .btn{width:100%;text-align:center}}

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3508" height="4961" viewBox="0 0 3508 4961">
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f0fbff"/>
+      <stop offset="100%" stop-color="#e6f6ff"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="100%" height="100%" fill="url(#bg)"/>
+
+  <!-- Header band -->
+  <rect x="160" y="160" width="3188" height="560" rx="30" fill="#0066CC"/>
+  <text x="300" y="420" font-family="Noto Sans, Arial, sans-serif" font-size="220" fill="#ffffff">포항_24_7</text>
+  <text x="300" y="560" font-family="Noto Sans, Arial, sans-serif" font-size="96" fill="#dceeff">지역 콘텐츠 발굴 콘테스트</text>
+
+  <!-- Main info block -->
+  <g transform="translate(220,900)">
+    <rect width="3068" height="1100" rx="24" fill="#ffffff" stroke="#cfe9ff" stroke-width="6"/>
+    <text x="60" y="140" font-family="Noto Sans, Arial, sans-serif" font-size="84" fill="#003366">2026.11.03 (화) 18:00</text>
+    <text x="60" y="260" font-family="Noto Sans, Arial, sans-serif" font-size="68" fill="#003366">파랑뜰 2층</text>
+
+    <text x="60" y="420" font-family="Noto Sans, Arial, sans-serif" font-size="56" fill="#003366">대학생·지역 크리에이터 대상 — 발표·시상·네트워킹</text>
+
+    <text x="60" y="640" font-family="Noto Sans, Arial, sans-serif" font-size="48" fill="#0066CC">발표 신청 마감: 2026-10-27 · 발표시간 10분(발표 8분 + Q&A 2분)</text>
+  </g>
+
+  <!-- Right QR placeholder -->
+  <rect x="2560" y="1200" width="760" height="760" fill="#ffffff" stroke="#cccccc"/>
+  <text x="2600" y="1600" font-family="Noto Sans, Arial, sans-serif" font-size="52" fill="#666666">QR 코드 삽입</text>
+  <text x="2600" y="1730" font-family="Noto Sans, Arial, sans-serif" font-size="40" fill="#666666">(등록/세부정보 링크)</text>
+
+  <!-- Footer band -->
+  <rect x="160" y="4300" width="3188" height="420" rx="20" fill="#ffffff" stroke="#e6f6ff"/>
+  <text x="300" y="4550" font-family="Noto Sans, Arial, sans-serif" font-size="48" fill="#333333">주최: 포항_24_7 운영팀 · 문의: 담당자 연락처</text>
+  <text x="300" y="4710" font-family="Noto Sans, Arial, sans-serif" font-size="40" fill="#666666">※ 인쇄 시 도련(bleed) 3mm, 안전영역 10mm 권장</text>
+
+  <!-- Decorative wave (simple) -->
+  <path d="M0 3800 C 800 3600, 1200 4200, 2000 4000 C 2800 3800, 3200 4200, 3508 4000 L 3508 4961 L 0 4961 Z" fill="#00A3E0" opacity="0.08"/>
+
+</svg>

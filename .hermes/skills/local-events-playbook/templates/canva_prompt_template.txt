@@ -1,0 +1,20 @@
+POHANG 24/7 - Canva Prompt Template
+
+Purpose: Create an A3 poster and social assets for POHANG 24/7
+Style: Modern, local identity; primary color #0B72B9, accent #FF6B6B
+Layout: Header (event title), hero image, date/time/place, CTA + QR code, footer (organizers & sponsors)
+Sizes:
+- A3 print: 297 x 420 mm
+- Instagram post: 1080 x 1080 px
+- Instagram story: 1080 x 1920 px
+
+Text blocks (editable):
+- Title: POHANG 24/7 — 지역 콘텐츠 발굴 콘테스트
+- Subtitle: 2026.11.03 (화) 18:00 | 파랑뜰 2층
+- CTA: 지금 접수하기 → QR (등록 마감: 2026-10-20)
+
+Notes for designer:
+- Use Noto Sans KR or Malgun Gothic for headings
+- Use representative images of Pohang (coast, harbor, local festival scenes)
+- Leave a clear placeholder for a QR code (at least 6cm square on A3)
+

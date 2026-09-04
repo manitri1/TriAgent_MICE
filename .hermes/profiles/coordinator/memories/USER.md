@@ -1,0 +1,1 @@
+Project coordinator for '마이스 아카데미 1·2기 네트워킹 데이' (workspace: /opt/data/workspace/마이스_네트워킹데이).

@@ -1,0 +1,11 @@
+field_label,field_type,required,help_text
+이름,short_answer,TRUE,
+이메일,email,TRUE,
+소속/단체,short_answer,FALSE,
+직책/전공,short_answer,FALSE,
+연락처(휴대폰),short_answer,FALSE,
+참가 유형,dropdown,TRUE,개인 / 단체 / 업계 관계자 중 선택
+관심 주제,checkboxes,FALSE,네트워킹 / 채용 / 창업 / 협업 아이디어
+개인정보 수집·이용 동의,checkbox,TRUE,"참석자 정보 수집 및 행사 홍보 목적(예: 사진, 영상 활용) 동의"
+비고(추가 요청사항),paragraph,FALSE,
+파일 업로드, file_upload, FALSE,포트폴리오 혹은 간단한 소개 자료(선택)

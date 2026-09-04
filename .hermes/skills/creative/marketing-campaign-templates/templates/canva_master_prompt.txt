@@ -1,0 +1,33 @@
+Canva master prompt template (fill-in)
+
+---
+Project: {EVENT_TITLE}
+Language: Korean
+Primary colors: #0066CC, #00A3E0, #FFB400
+Fonts: Noto Sans KR Bold / Noto Sans KR Regular / Noto Sans KR Light
+Output sizes: A3 (297x420mm, bleed 3mm), Instagram 1080x1080, Story 1080x1920
+
+Structure:
+Page 1 — Cover
+- Title: {EVENT_TITLE}
+- Subtitle: {EVENT_SUBTITLE}
+- Date/time: {EVENT_DATETIME}
+- Venue: {EVENT_VENUE}
+- CTA: "지금 등록하기 → QR 스캔"
+
+Page 2 — Contents
+- list pages
+
+Page 3 — Participant info
+- fields: team name, representative, contact, email, affiliation, team members
+
+Page 4 — Submission info
+- fields: title, short summary, file/link upload instructions
+
+Design tokens & export
+- bleed 3mm, safety 10mm
+- logos: upload under /inputs/logo.png
+- export: PDF(Print) for A3, PNG for SNS
+
+Notes:
+- Keep copy in Korean. Use placeholders [CONTACT_EMAIL] until confirmed.

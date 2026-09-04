@@ -1,0 +1,9 @@
+Question Title,Type,Required,Options,Help Text
+이름,Short answer,TRUE,,예: 홍길동
+이메일,Short answer,TRUE,,접수 확인용 이메일
+연락처,Short answer,TRUE,,휴대폰 번호 (예: 010-1234-5678)
+소속/Affiliation,Short answer,FALSE,,학교/기관/팀
+작품 제목,Short answer,TRUE,,출품작의 간단한 제목
+작품 요약,Paragraph,TRUE,,작품 개요(300~500자 권장)
+제출 파일,File upload,FALSE,,발표자료(PDF/PPT) (최대 50MB)
+저작권/동의,Multiple choice,TRUE,"동의,비동의","주최측의 홍보 및 아카이빙을 위한 사진·영상 사용에 대한 동의 여부"

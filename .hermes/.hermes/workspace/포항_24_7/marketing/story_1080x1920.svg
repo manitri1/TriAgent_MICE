@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <rect x="40" y="80" width="1000" height="720" rx="20" fill="#f3fbff" stroke="#cfe9ff"/>
+  <text x="80" y="170" font-family="Noto Sans, Arial, sans-serif" font-size="56" fill="#0066CC">포항_24_7</text>
+  <text x="80" y="220" font-family="Noto Sans, Arial, sans-serif" font-size="28" fill="#003366">2026.11.03 (화) 18:00  |  파랑뜰 2층</text>
+
+  <g transform="translate(80,320)">
+    <rect width="920" height="960" rx="12" fill="#ffffff" stroke="#e6f6ff"/>
+    <text x="40" y="120" font-family="Noto Sans, Arial, sans-serif" font-size="28" fill="#333333">대학생·지역 크리에이터 대상 콘텐츠 발표·전시·시상</text>
+    <text x="40" y="180" font-family="Noto Sans, Arial, sans-serif" font-size="24" fill="#333333">발표자 제출 기한: 2026-10-27  · 발표시간: 10분(8+Q&A)</text>
+  </g>
+
+  <!-- QR placeholder centered -->
+  <rect x="430" y="1460" width="220" height="220" fill="#ffffff" stroke="#cccccc"/>
+  <text x="430" y="1710" font-family="Noto Sans, Arial, sans-serif" font-size="20" fill="#666666">QR 코드 삽입</text>
+
+  <text x="80" y="1880" font-family="Noto Sans, Arial, sans-serif" font-size="18" fill="#666666">지금 등록 → QR 또는 링크</text>
+</svg>

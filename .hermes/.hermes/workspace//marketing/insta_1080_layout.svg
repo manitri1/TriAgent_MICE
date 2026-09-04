@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+  <rect width="100%" height="100%" fill="#F7F9FB"/>
+  <rect x="40" y="40" width="1000" height="160" rx="12" fill="#0066CC"/>
+  <text x="80" y="130" font-family="Noto Sans, Arial, sans-serif" font-size="56" fill="#ffffff">POHANG 24/7</text>
+  <text x="80" y="170" font-family="Noto Sans, Arial, sans-serif" font-size="20" fill="#dceeff">체류형 관광 콘텐츠 공모전 & 발표회</text>
+
+  <rect x="60" y="220" width="960" height="560" rx="12" fill="#ffffff" stroke="#e6f6ff"/>
+  <text x="100" y="320" font-family="Noto Sans, Arial, sans-serif" font-size="36" fill="#233044">2026.11.03 (화) 18:00</text>
+  <text x="100" y="370" font-family="Noto Sans, Arial, sans-serif" font-size="28" fill="#003366">파랑뜰 2층 드림홀</text>
+  <text x="100" y="430" font-family="Noto Sans, Arial, sans-serif" font-size="20" fill="#666666">제출 마감: 2026-07-20  |  주최: 몽쉘 야호 (3조+9조 통합)</text>
+
+  <rect x="740" y="720" width="220" height="220" fill="#ffffff" stroke="#cccccc"/>
+  <text x="760" y="820" font-family="Noto Sans, Arial, sans-serif" font-size="18" fill="#666666">QR</text>
+
+  <text x="80" y="980" font-family="Noto Sans, Arial, sans-serif" font-size="18" fill="#666666">지금 등록하기 → 프로필 링크 또는 QR 스캔</text>
+</svg>

@@ -1,0 +1,72 @@
+id,parent_id,title,owner,due,status,notes
+T1,,프로그램 식순 확정(초안→확정),Program Lead,2026-09-30,pending,Ref: /opt/data/proposals/pohang-mice-academy-2026/contest-program-draft.md
+T2,,접수폼 제작·테스트 (구글폼),Marketing Lead,2026-09-15,in-progress,초안 제작 및 앱스크립트 활용
+T3,,파랑뜰 장비 제공 범위 확인,Operations Lead,2026-09-10,pending,Contact venue manager
+T4,,연사·심사위원 섭외 (1차),Program Lead / Partner,2026-09-20,pending,target 3~5 judges
+T5,,촬영자 섭외·견적 수령,Media Lead,2026-09-20,pending,budget check
+T6,,홍보물 배포(A3 7매, 현수막 2개),Marketing Lead,2026-09-05,done,locations: campus, station, community center
+T7,,예산 배분(잔여 369,000원) 확정,Finance,2026-09-05,pending,suggest allocation in project_plan.md
+T8,,리허설 스케줄 확정,Operations Lead,2026-10-27,pending,recommend D-7 rehearsal
+E1,,전략 기획서 최종 확정 (Program plan finalization),PM,2026-08-06,pending,D-90 milestone
+E1.1,E1,초안 작성 및 내부 검토,Program Lead,2026-07-30,done,Draft program document
+E1.2,E1,PM 승인 회의(초안 검토),PM,2026-08-06,pending,Approve final program direction
+E1.3,E1,프로그램 최종본 배포(팀 공유),Program Lead,2026-08-07,pending,Publish final program doc
+E2,,파트너·대학·관광센터 1차 접촉,PM / Partner Coordinator,2026-09-05,pending,Establish partner list and contact
+E2.1,E2,파트너 목록 작성 및 우선순위 지정,Partner Coordinator,2026-08-10,pending,List universities, tourism center, sponsors
+E2.2,E2,초안 이메일/제안서 발송,Partner Coordinator,2026-08-20,pending,Send invitations and MOU template
+E2.3,E2,파트너 회의 및 MOU 체결(요약),PM,2026-09-05,pending,Record agreements
+E3,,구글폼 생성 및 테스트 (폼 자동화),Marketing Lead,2026-09-05,todo,Use Apps Script KO to create form
+E3.1,E3,폼 템플릿 리뷰 및 문구 확정,Marketing Lead,2026-08-25,in-progress,Use strategy template fields
+E3.2,E3,Apps Script 배포 및 폼 생성,Marketing Lead,2026-09-01,todo,Run createStrategyFormKR()
+E3.3,E3,테스트 응답 수집 및 확인,Marketing Lead,2026-09-05,todo,Verify file upload and links
+E4,,Save-the-Date 및 초기 홍보(캠퍼스·SNS),Marketing Lead,2026-09-05,todo,First wave announcement
+E4.1,E4,포스터 배포 위치 최종확정,Marketing Lead,2026-08-25,done,Campus/station/community
+E4.2,E4,SNS 콘텐츠 캘린더 작성 및 승인,Marketing Lead,2026-09-01,in-progress,Schedule posts D-60,D-30,D-7
+E4.3,E4,광고/파트너 홍보 협조 요청,Marketing Lead,2026-09-05,todo,Ask partners to share
+E5,,심사위원 섭외(3~5인) 및 심사표 준비,Program Lead,2026-09-20,pending,Identify and invite judges
+E5.1,E5,심사 기준(루브릭) 최종화,Program Lead,2026-08-30,done,Creativity/Feasibility/Local/Presentation
+E5.2,E5,심사위원 후보 접촉 및 확정,Program Lead,2026-09-20,pending,Confirm availability and compensation
+E5.3,E5,심사표(구글시트) 템플릿 생성,Program Lead,2026-09-25,todo,Prepare sheet for judges
+E6,,장비/대여 확정(프로젝터/마이크/예비장비),Operations Lead,2026-09-19,pending,Compare 2 vendor quotes
+E6.1,E6,파랑뜰 제공 장비 목록 확인,Operations Lead,2026-08-15,done,Get inventory from venue
+E6.2,E6,외부장비 견적 수령 및 계약,Operations Lead,2026-09-05,pending,Select vendor and sign contract
+E6.3,E6,리허설 AV 체크리스트 작성,Operations Lead,2026-10-27,todo,Checklist for D-7 rehearsal
+E7,,촬영계약 및 편집 범위 확정,Media Lead,2026-09-20,pending,Decide deliverables and timeline
+E7.1,E7,촬영자 2곳 이상 견적 비교,Media Lead,2026-09-05,pending,Get quotes
+E7.2,E7,편집 스케줄,납품물 사양 확정,Media Lead,2026-10-20,pending,Deliverables: photos, 1-2min highlights
+E8,,홍보물(A3, 현수막) 제작·배포 감리,Marketing Lead,2026-09-05,done,Printed and distributed
+E8.1,E8,QR 코드 생성 및 포스터에 적용,Marketing Lead,2026-08-28,done,Link to form
+E8.2,E8,배포 장소/스케줄 업데이트,Marketing Lead,2026-09-01,done,List campus,station,community
+E9,,리허설 운영 계획 수립 및 스태프 배치,Operations Lead,2026-10-27,todo,Confirm volunteer roles
+E9.1,E9,스태프(자원봉사) 모집 및 배정,Partner Coordinator,2026-10-10,in-progress,Create shifts and briefing
+E9.2,E9,리허설 시간표 및 리허설 체크리스트,Operations Lead,2026-10-27,todo,Assign AV test times
+E10,,현장운영 매뉴얼(체크인·타임키핑·Q&A 규정),Operations Lead,2026-10-27,todo,Create run-sheet and contact list
+E10.1,E10,체크인 프로세스 및 명찰 준비,Operations Lead,2026-10-27,todo,Prepare badge templates and registration desk
+E10.2,E10,시간관리(타임키핑) 툴 및 담당자 확정,Operations Lead,2026-10-27,todo,Assign timekeeper and tools
+E11,,보도자료 작성 및 배포(행사 전/후),Marketing Lead,2026-10-20,todo,Prepare press release draft and distribution list
+E11.1,E11,행사 전 보도자료 초안,Marketing Lead,2026-10-10,todo,Share with PM for approval
+E11.2,E11,행사 후 보도자료 및 사진 패키지 배포,Media Lead,2026-11-17,todo,Deliver photos and highlight clip
+E12,,예산 확정 및 결제 프로세스 정비,Finance,2026-09-05,pending,Finalize allocation and payment flow
+E12.1,E12,영수증 수령/정산 폴더 구조 생성,Finance,2026-09-10,todo,Create shared drive folder
+E12.2,E12,지급 일정표 및 승인 권한 설정,Finance,2026-09-05,todo,Set approval thresholds
+E13,,발표자 확정 및 자료 수령(사전 제출 관리),Program Lead,2026-10-20,pending,Collect slides and summary
+E13.1,E13,사전 제출 양식 및 접수 확인,Marketing Lead,2026-10-10,in-progress,Verify uploads
+E13.2,E13,발표자 리허설 스케줄 통보,Program Lead,2026-10-27,todo,Confirm rehearsal slots
+E14,,현장 안전/비상계획 수립(안전) ,Operations Lead,2026-10-20,pending,First aid, evacuation plan
+E14.1,E14,비상연락망(연사/장비업체/운영팀) 작성,Operations Lead,2026-10-10,todo,Create contact sheet
+E14.2,E14,대체장비/예비상황 체크,Operations Lead,2026-10-20,todo,Prepare backups (mic, laptop)
+E15,,행사 진행(현장 운영),All Leads,2026-11-03,todo,Execute run-sheet
+E15.1,E15,리허설(오후) 실행,All Leads,2026-11-03,todo,Check AV and timings
+E15.2,E15,행사 중 운영 지원 및 모니터링,All Leads,2026-11-03,todo,Live support
+E16,,행사 후 작업(편집/보도/정산),Media Lead / Program Lead,2026-11-17,todo,Post-event deliverables and accounting
+E16.1,E16,편집본 납품(사진/영상) 확인,Media Lead,2026-11-10,todo,Confirm editing deliverables
+E16.2,E16,정산서 및 영수증 최종 제출,Finance,2026-11-17,todo,Finalize expense report
+
+## Quick links / commands
+- Open strategy: less /opt/data/workspace/pohang-mice-academy-2026/strategy.md
+- Open execution plan: less /opt/data/workspace/pohang-mice-academy-2026/execution_plan_draft.md
+- Open google apps script (ko): /opt/data/workspace/pohang-mice-academy-2026/templates/google_apps_script_ko.js
+
+## Notes
+- Each E-task has subtasks (E#.#) for operational steps. Owners should update status and notes weekly.
+- PM coordinates approvals and final checks.

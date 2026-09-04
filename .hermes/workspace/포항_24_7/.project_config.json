@@ -1,0 +1,16 @@
+{
+  "project": "포항_24_7",
+  "root": "/opt/data/workspace/포항_24_7",
+  "created": "2026-08-07",
+  "notes": "Canonical project workspace for the 포항 콘텐츠 발굴 콘테스트 (Pohang content-discovery contest). An earlier session created a separate folder under the slug 'pohang-mice-academy-2026' for the same event; that content was consolidated into archive/legacy_pohang-mice-academy-2026/ on 2026-08-09. Always reuse this slug/root for this event — do not create a new project folder for it.",
+  "paths": {
+    "docs": "docs",
+    "marketing": "marketing",
+    "proposals": "proposals",
+    "roles": "roles",
+    "website": "website",
+    "inputs": "inputs",
+    "outputs": "outputs",
+    "archive": "archive"
+  }
+}

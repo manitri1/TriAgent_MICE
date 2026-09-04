@@ -51,6 +51,13 @@ services:
     volumes:
       - ./.hermes:/opt/data
     ports:
-      - "127.0.0.1:9125:9119"   # 대시보드는 API 키를 다루므로 localhost에만 바인딩
+      - "127.0.0.1:9125:9119"   # 호스트 쪽 노출은 localhost로 제한 (LAN/외부에서는 접근 불가)
                                   # (9119/9120/9121/9124/9219도 형제 프로젝트가 이미 사용 중)
-    command: ["dashboard", "--host", "127.0.0.1", "--no-open"]
+    command: ["dashboard", "--host", "0.0.0.0", "--no-open"]
+    # ⚠️ 컨테이너 "내부" 바인딩은 0.0.0.0이어야 한다 — 127.0.0.1로 바인딩하면 컨테이너 자신의
+    # 네트워크 네임스페이스 루프백에만 붙어서, Docker의 포트 포워딩(위 ports:)이 도달하지
+    # 못해 TCP는 연결되지만 HTTP 응답이 없는 상태가 된다(실측: curl이 "Empty reply from
+    # server"). 실제 외부 노출 범위는 위 ports:의 "127.0.0.1:9125:..." 호스트 바인딩이
+    # 담당하므로 컨테이너 내부를 0.0.0.0으로 열어도 LAN에는 노출되지 않는다. 다만 Hermes
+    # Agent는 0.0.0.0 바인딩을 감지하면 자동으로 인증을 요구하므로 .hermes/.env에
+    # HERMES_DASHBOARD_BASIC_AUTH_USERNAME/PASSWORD/SECRET을 채워야 한다.
