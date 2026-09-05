@@ -172,9 +172,9 @@ asia-fintech-summit-2026 사전 예산 3억원, 실제 집행 3.1억원. 벤더 
 | ID | 시나리오 | 상태 |
 |---|---|---|
 | TC-01 | 신규 행사 통째로 위임 | ⬜ 미실시 |
-| TC-02 | kanban_create + 디스패처 자동 spawn | ⬜ 미실시 |
+| TC-02 | kanban_create + 디스패처 자동 spawn | ✅ 2026-09-05 로컬 검증 |
 | TC-03 | Active Verification | ⬜ 미실시 |
-| TC-04 | HITL 게이트 7종 kanban_block/unblock | ⬜ 미실시 |
+| TC-04 | HITL 게이트 7종 kanban_block/unblock | 🟡 2026-09-05 구조 검증(block/unblock 메커니즘) — 7개 게이트 각각의 실제 대화 프로토콜은 미검증 |
 | TC-05 | proposal-agent RFP 분석 | ⬜ 미실시 |
 | TC-06 | budget-vendor-agent 견적/승인 게이트 | ⬜ 미실시 |
 | TC-07 | outreach-agent 메일/발송 게이트 | ⬜ 미실시 |
@@ -185,12 +185,86 @@ asia-fintech-summit-2026 사전 예산 3억원, 실제 집행 3.1억원. 벤더 
 | TC-12 | exhibition-agent 부스 배치/계약 승인 게이트 | ⬜ 미실시 |
 | TC-13 | marketing-agent 캠페인 승인 게이트 | ⬜ 미실시 |
 | TC-14 | finance-settlement-agent 정산 승인 게이트 | ⬜ 미실시 |
-| TC-15 | parents 기반 DAG 승격 | ⬜ 미실시 |
-| TC-16 | auto_subscribe_on_create 재개 | ⬜ 미실시 |
-| TC-17 | coordinator 툴셋 회귀 | ⬜ 미실시 |
+| TC-15 | parents 기반 DAG 승격 | ✅ 2026-09-05 로컬 검증 |
+| TC-16 | auto_subscribe_on_create 재개 | ⬜ 미실시(테스트 방법 자체를 재검토해야 함, 아래 기록 참고) |
+| TC-17 | coordinator 툴셋 회귀 | ✅ 2026-09-05 로컬 검증 |
 
 ## 부록: 테스트 실행 기록
 
-아직 실행한 테스트가 없어 기록이 비어 있습니다. 실제 배포·실행 후, `TriAgent_Planner/
-docs/10-usecase-tests.md`의 형식(목적/실행 방법/결과(날짜)/근거 문자열 인용)을 따라 이
-섹션에 추가하세요.
+로컬 Docker Compose(`hermes-triagent-mice` 컨테이너, 5주 전부터 상시 기동 중이던 로컬
+인스턴스)에서 재설계 직후 1차 스모크 테스트를 실행했습니다. 실행 전 `docker compose
+restart hermes`로 새 `config.yaml`/`SOUL.md`를 반영했습니다.
+
+### TC-17 — coordinator 툴셋 회귀 (2026-09-05, ✅ 통과)
+
+**목적**: `coordinator/config.yaml`에 처음으로 `toolsets:` 명시 목록을 추가했을 때 기존에
+암묵적으로 쓰던 다른 툴이 사라지는지 확인.
+
+**실행**: `hermes -p coordinator chat -q "초기화 테스트: 지금 사용 가능한 tool 이름들을
+목록으로만 나열해줘"`.
+
+**결과**: `terminal`, `memory`, `todo`, `skill_manage`, `execute_code`, `browser_*`,
+`read_file`/`write_file`/`patch`, `cronjob` 등 `toolsets:` 목록에 없던 툴이 전부 그대로
+나타남 — 즉 `toolsets:`는 **제한(allowlist)이 아니라 게이트된 툴셋(`kanban`)을 추가로
+켜는 opt-in**으로 동작했습니다. 회귀 없음. 부수 발견: `delegate_task`는 여전히 노출됨
+(SOUL.md 행동 규범으로만 금지 — 기존에 알던 대로), `messaging`은 이 CLI 단발 세션에는
+나타나지 않음(게이트웨이 채널 세션에서만 노출되는 것으로 추정 — TC-16과 함께 재검토 필요).
+
+### TC-02 — kanban_create + 디스패처 자동 spawn (2026-09-05, ✅ 통과)
+
+**목적**: `kanban_create()`만으로(terminal 호출 없이) 디스패처가 실제 워커 프로세스를
+자동 구동하는지 확인.
+
+**실행**: coordinator에게 `kanban_create(title="SMOKE TEST hello", assignee="proposal-agent",
+workspace="dir:/opt/data/workspace/proposals/smoke-test", tenant="smoke-test", ...)` 호출을
+지시.
+
+**결과**: task `t_6a85dcd1`이 `ready → running → done`으로 자동 전이(총 24초). 이벤트 로그에
+`claimed`→`spawned {'pid': 476}`→`heartbeat`→`completed`가 순서대로 기록됨 — 실제
+`proposal-agent` 프로세스가 spawn됐음을 확인. `workspace/proposals/smoke-test/outputs/
+hello.md`에 지시한 내용이 정확히 생성됨. 테스트 후 태스크는 `hermes kanban archive`로
+정리.
+
+### TC-15 — parents 기반 DAG 승격 (2026-09-05, ✅ 통과)
+
+**목적**: 자식 태스크가 부모 완료 전까지 `ready`로 승격되지 않는지 확인.
+
+**실행**: `hermes kanban create`로 부모(`t_bcff76db`, proposal-agent) 생성 후,
+`--parent t_bcff76db`로 자식(`t_9d0f2bcd`, postevent-analyst) 생성.
+
+**결과**: 자식은 생성 직후 `todo` 상태(부모가 `ready`인 동안 승격 안 됨) → 부모가
+`done`이 된 직후에만 `ready`로 전이 → 자동으로 `running`→`done`까지 진행. 자식 산출물
+(`outputs/child.md`)도 정확히 생성됨. 테스트 후 정리.
+
+### TC-04(부분) — kanban_block/kanban_unblock 메커니즘 (2026-09-05, 🟡 구조만 검증)
+
+**목적**: `kanban_block`이 디스패처의 재구동을 실제로 막는지, `kanban_unblock`이 실제로
+재개시키는지 확인.
+
+**실행**: 워커(budget-vendor-agent)에게 즉시 `kanban_block(reason=...)`을 호출하도록
+지시하는 태스크(`t_d12c2db3`) 생성 → `blocked` 확인 후 65초(2 폴링 주기 이상) 대기하며
+재시도 여부 확인 → `hermes kanban unblock`으로 재개.
+
+**결과**: `blocked` 상태로 65초간 이벤트 수 변화 없음(재시도 안 함, 정상) → `unblock` 후
+실제로 재-spawn(`run 6`, `pid 1087`) 확인. **부수 발견**: 이 태스크는 매번 즉시
+`kanban_block`을 호출하도록 지시했기 때문에, unblock 후 재구동된 워커가 다시 즉시
+block을 호출하자 디스패처가 `block_loop_detected`(recurrences=2, limit=2)를 감지해
+태스크를 `triage` 상태로 격하시켰습니다 — 무한 재시도 방지 안전장치로 보이며 버그가
+아닙니다. **다만 이는 실제 HITL 설계에 함의가 있습니다**: 승인 후 `kanban_unblock()`만
+호출하고 아무 코멘트도 남기지 않으면, 워커가 같은 판단 로직으로 재차 동일 게이트에
+걸려 반복 차단→triage로 격하될 위험이 있습니다. `docs/06-hitl-approval-design.md`와
+각 워커 SOUL.md에 "승인 시 `kanban_unblock()`과 함께(또는 직전에) `kanban_comment()`로
+승인 내용을 명시적으로 남긴다"를 추가하는 보완이 필요합니다(TODO — 아직 반영 안 함).
+7개 게이트 각각의 실제 대화 프로토콜(메시지 구성, 반려 흐름)은 아직 미검증.
+
+### TC-16 — auto_subscribe_on_create 재개 (2026-09-05, ⬜ 미실시 — 테스트 방법 재검토 필요)
+
+**시도**: TC-02 실행 중 `.hermes/gateway_state.json` 및 컨테이너 로그에서 "subscri"/"resum"
+키워드를 검색했으나 아무 흔적도 없었습니다.
+
+**결론**: `hermes -p coordinator chat -q "..."`는 응답 즉시 세션이 종료되는 **1회성 CLI
+호출**이라, 애초에 "재개"할 살아있는 세션이 없습니다. `auto_subscribe_on_create`의 재개
+메커니즘은 게이트웨이에 연결된 **상시 세션**(Discord 채널, 대시보드 채팅 등)에만 적용될
+가능성이 높습니다 — 이는 이 항목을 검증하려면 CLI 단발 호출이 아니라 실제 게이트웨이
+채널(현재 Discord 토큰이 무효라 막혀 있음 — 토큰 재발급 후) 또는 대시보드 채팅으로
+coordinator와 대화하며 확인해야 함을 의미합니다. Discord 연동 복구 후 재시도 필요.

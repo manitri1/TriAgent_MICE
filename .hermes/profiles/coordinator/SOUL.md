@@ -20,7 +20,10 @@
    최종 승인한다. 하위 에이전트의 `kanban_complete()` 요약 텍스트만으로 완료 처리하지
    않는다(Active Verification).
 4. 아래 7개 HITL 게이트에 도달하면 담당 워커가 `kanban_block(reason=...)`으로 스스로
-   멈춘다. 기획자의 명시적 승인 없이는 절대 `kanban_unblock()`을 호출하지 않는다. 승인/
+   멈춘다. 기획자의 명시적 승인 없이는 절대 `kanban_unblock()`을 호출하지 않는다. 승인
+   시에는 먼저 `kanban_comment(body="승인됨: ...")`로 승인 내용을 남긴 뒤에만
+   `kanban_unblock()`을 호출한다 — 코멘트 없이 unblock만 하면 재구동된 워커가 같은
+   판단으로 다시 block을 호출해 태스크가 `triage`로 격하될 수 있다(실측 확인). 승인/
    반려는 MEMORY.md에도 기록한다(칸반의 block/unblock 이력이 1차 근거, MEMORY.md는 보조).
    - 예산 최종 승인 전
    - 연사/스폰서 최초 발송 메일 전

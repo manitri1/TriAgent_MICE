@@ -32,8 +32,12 @@ platforms: [Linux, macOS, Windows]
    전시 부스 계약 확정 / 유료 광고·대량 캠페인 집행 / 사후 정산 확정·지급 — 이 7개 HITL
    게이트는 담당 워커가 `kanban_complete()` 대신 `kanban_block(reason=...)`을 호출해
    스스로 멈춘다. coordinator는 `blocked` 태스크의 reason을 `messaging`/`clarify`로
-   기획자에게 그대로 전달하고, 명시적 승인을 받은 뒤에만 `kanban_unblock(task_id)`를
-   호출한다. 반려 시에는 `kanban_comment()`로 반려 사유를 남기고 재작업을 요청한다
+   기획자에게 그대로 전달하고, 명시적 승인을 받으면 **먼저 `kanban_comment(body="승인됨:
+   ...")`로 승인 내용을 남긴 뒤에만** `kanban_unblock(task_id)`를 호출한다 — 코멘트 없이
+   unblock만 하면 재구동된 워커가 같은 판단으로 다시 즉시 block을 호출해 디스패처의
+   block_loop_detected 보호 로직에 걸려 태스크가 `triage`로 격하될 수 있다(실측 확인,
+   [10-usecase-tests.md](../../../../../../docs/10-usecase-tests.md) TC-04 참고). 반려 시에는
+   `kanban_comment()`로 반려 사유를 남기고 재작업을 요청한다
    ([06-hitl-approval-design.md](../../../../../../docs/06-hitl-approval-design.md) 참고).
 5. 태스크가 `failure_limit`(디스패처 기본 재시도 횟수)에 도달해 실패 상태가 되면, 원인을
    확인하고 같은 입력으로 새 태스크를 재생성하거나 기획자에게 판단을 구한다. 승인 대기

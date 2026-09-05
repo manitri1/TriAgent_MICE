@@ -119,8 +119,13 @@ Procedures (step-by-step)
   (not a summary). coordinator relays that reason via `clarify()`/`messaging`
   to the planner and waits for an explicit, unambiguous approval.
 - Only after explicit approval does coordinator call `kanban_unblock(task_id)`
-  so the worker can resume. On rejection, use `kanban_comment()` to record the
-  rejection reason and requested changes instead of unblocking.
+  so the worker can resume — but FIRST leave `kanban_comment(body="approved: ...")`
+  stating what was approved. Unblocking with no comment risks the resumed worker
+  hitting the same gate condition again immediately and re-calling `kanban_block`,
+  which trips the dispatcher's own block-loop protection and demotes the task to
+  `triage` (observed in local smoke testing 2026-09-05 — see
+  docs/10-usecase-tests.md TC-04). On rejection, use `kanban_comment()` to record
+  the rejection reason and requested changes instead of unblocking.
 - Record the coordinator's explicit approval/rejection (written) in the
   relevant docs/MEMORY.md as a secondary record — the kanban block/unblock
   timestamps on the task itself are the primary record.

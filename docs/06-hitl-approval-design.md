@@ -116,6 +116,12 @@ LLM이 스스로 기억해야 했고, 승인 이력도 `coordinator/MEMORY.md`�
 4. 모든 승인/반려는 날짜와 함께 `coordinator/MEMORY.md`에도 기록한다 — 단, 1차 근거는
    해당 태스크의 `kanban_block`/`kanban_unblock` 타임스탬프와 `kanban_comment` 이력이다.
    MEMORY.md가 비어 있더라도 보드에서 승인 이력을 재구성할 수 있어야 한다.
+5. **승인 시 `kanban_unblock(task_id)`를 호출하기 전에 반드시 먼저 `kanban_comment(body=
+   "승인됨: ...")`로 승인 내용을 남긴다.** 코멘트 없이 unblock만 하면 재구동된 워커가
+   같은 판단 로직으로 다시 즉시 `kanban_block`을 호출할 수 있고, 이는 디스패처의
+   block_loop_detected 보호 로직에 걸려 태스크가 `triage`로 격하된다 — 2026-09-05 로컬
+   스모크 테스트에서 실측 확인([10-usecase-tests.md](10-usecase-tests.md) TC-04). 각 게이트의
+   "칸반 구현" 소절에 있는 `kanban_unblock()` 호출은 모두 이 규칙을 전제한다.
 
 > 게이트웨이의 `/approve`·`/deny`(`approvals.mode`)와 이 앱 레벨 메시징 기반 승인을 혼동하지
 > 않습니다 — 전자는 쉘 명령 실행 승인이고, 후자는 이 문서가 정의하는 도메인 승인입니다.
