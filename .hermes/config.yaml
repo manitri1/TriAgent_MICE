@@ -14,3 +14,16 @@ platforms:
 onboarding:
   seen:
     busy_input_prompt: true
+kanban:
+  dispatch_in_gateway: true
+  dispatch_interval_seconds: 30
+  failure_limit: 3
+  max_in_progress: null
+  max_in_progress_per_profile: 1
+  auto_decompose: false
+  orchestrator_profile: "coordinator"
+  default_assignee: "coordinator"
+  auto_subscribe_on_create: true
+  done_sub_retention_days: 30
+  default_workdir: "/opt/data/workspace"
+  review_dispatch: false

@@ -19,3 +19,10 @@ Common pitfalls
 - Marking tasks done on agent text alone. Always open files and perform checks.
 
 Usage note: copy this file into the project's docs/ when you start a new event so the whole team can see workspace rules.
+
+Kanban tie-in: the workspace path confirmed here is also what you pass as
+`workspace: "dir:<path>"` on every `kanban_create()` call for that event, and
+the event slug (folder name) doubles as the `tenant` value on those same
+calls — see templates/kanban_create_call_reference.md. This is what gives the
+"never mix event data" rule above a real technical backing (board-level
+tenant isolation), not just a prompt-level rule.

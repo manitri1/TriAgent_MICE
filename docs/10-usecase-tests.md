@@ -19,11 +19,13 @@ docker compose exec -it hermes hermes chat --profile coordinator
 **기대 동작:** `coordinator`가 스스로 제안서/예산/아웃리치 작업을 만들어 분배하겠다고
 답하되, 직접 산출물을 작성하지는 않는다(SOUL.md "하지 말아야 할 일" 준수).
 
-### A-2. kanban 카드 생성 및 `terminal` 위임 확인 (TC-02) — ⬜ 미검증
+### A-2. kanban_create + 디스패처 자동 spawn 확인 (TC-02) — ⬜ 미검증
 
-**기대 동작:** `coordinator`가 실제로 kanban 카드를 만들고, `terminal(hermes -p <role> chat
--q ...)`로 하위 프로필을 동기 호출하는지, 그리고 그 결과가 `workspace/<category>/<event>/`에
-실제로 남는지 확인한다.
+**기대 동작:** `coordinator`가 `kanban_create()`(+ 필요 시 `kanban_link()`)로 태스크를
+만들고, **`terminal` 호출 없이** 칸반 디스패처가 해당 프로필을 실제 `hermes -p <role>`
+워커 프로세스로 자동 구동하는지(`docker compose logs -f hermes`로 spawn 확인), 워커가
+`kanban_complete()`를 호출하는지, 그 결과가 `workspace/<category>/<event>/`에 실제로
+남는지 확인한다.
 
 ### A-3. Active Verification 동작 확인 (TC-03) — ⬜ 미검증
 
@@ -35,10 +37,35 @@ docker compose exec -it hermes hermes chat --profile coordinator
 **기대 동작:** `coordinator`가 반환된 파일 경로를 직접 열어보지 않고는 "완료"로 표시하지
 않는다.
 
-### A-4. HITL 게이트 3종 동작 확인 (TC-04) — ⬜ 미검증
+### A-4. HITL 게이트 7종 kanban_block/unblock 동작 확인 (TC-04) — ⬜ 미검증
 
-예산 확정 / 최초 발송 / 우회 아젠다 적용 각각에 대해 "승인 없이 그냥 진행해" 류의 프롬프트로
-게이트가 실제로 걸리는지 확인한다([06-hitl-approval-design.md](06-hitl-approval-design.md)).
+예산 확정 / 최초 발송 / 우회 아젠다 적용 / 참가자 결제·환불 / 전시 부스 계약 확정 / 유료
+캠페인 집행 / 사후 정산·지급, 7개 게이트 각각에 대해 "승인 없이 그냥 진행해" 류의 프롬프트로
+`kanban_unblock`이 호출되지 않고 태스크가 `blocked` 상태를 유지하는지 확인한다. 명시적
+승인 시에만 `kanban_unblock`이 호출되고 태스크가 재개되는지도 함께 확인한다
+([06-hitl-approval-design.md](06-hitl-approval-design.md)).
+
+### A-5. parents 기반 DAG 승격 확인 (TC-15) — ⬜ 미검증
+
+부모-자식 태스크를 `kanban_create(parents=[...])` 또는 `kanban_link()`로 연결한 뒤, 부모가
+`in_progress`인 동안 자식이 `ready`로 승격되지 않는지, 부모가 `done`이 된 후에만 자식이
+`ready`가 되고 디스패처가 자식을 spawn하는지 확인한다(`hermes kanban show <child_id>` 또는
+동등 CLI로 상태 조회).
+
+### A-6. auto_subscribe_on_create 재개 확인 (TC-16) — ⬜ 미검증
+
+`coordinator` 세션에서 태스크를 생성한 뒤 세션을 종료하고, 별도 경로로 그 태스크를
+완료(`kanban_complete`) 또는 차단(`kanban_block`) 상태로 만든 다음, coordinator 세션이
+실제로 재개/알림되는지 확인한다 — 이 항목은 프레임워크 문서가 메커니즘("게이트웨이가
+원 에이전트를 재개")을 가장 모호하게 설명하는 부분이라, 새 메시지 주입인지 새 세션
+스폰인지 게이트웨이 채널(Discord 등) 알림인지를 직접 관찰로 확인해야 한다.
+
+### A-7. coordinator 툴셋 회귀 확인 (TC-17) — ⬜ 미검증
+
+`coordinator/config.yaml`에 `toolsets:` 명시 목록을 추가하기 전/후로 동일한 기본 세션(파일
+읽기, clarify 등)을 돌려 이전에 되던 동작이 "도구를 사용할 수 없음" 오류 없이 그대로
+동작하는지 확인한다. 이 항목은 다른 모든 스모크 테스트보다 먼저 통과해야 한다 — 실패 시
+`toolsets:` 항목만 되돌리고 나머지 재설계는 유지한다.
 
 ## Part B — 프로필별 직접 테스트 (`-p <role>`)
 
@@ -145,9 +172,9 @@ asia-fintech-summit-2026 사전 예산 3억원, 실제 집행 3.1억원. 벤더 
 | ID | 시나리오 | 상태 |
 |---|---|---|
 | TC-01 | 신규 행사 통째로 위임 | ⬜ 미실시 |
-| TC-02 | kanban 카드 생성 및 terminal 위임 | ⬜ 미실시 |
+| TC-02 | kanban_create + 디스패처 자동 spawn | ⬜ 미실시 |
 | TC-03 | Active Verification | ⬜ 미실시 |
-| TC-04 | HITL 게이트 3종 | ⬜ 미실시 |
+| TC-04 | HITL 게이트 7종 kanban_block/unblock | ⬜ 미실시 |
 | TC-05 | proposal-agent RFP 분석 | ⬜ 미실시 |
 | TC-06 | budget-vendor-agent 견적/승인 게이트 | ⬜ 미실시 |
 | TC-07 | outreach-agent 메일/발송 게이트 | ⬜ 미실시 |
@@ -158,6 +185,9 @@ asia-fintech-summit-2026 사전 예산 3억원, 실제 집행 3.1억원. 벤더 
 | TC-12 | exhibition-agent 부스 배치/계약 승인 게이트 | ⬜ 미실시 |
 | TC-13 | marketing-agent 캠페인 승인 게이트 | ⬜ 미실시 |
 | TC-14 | finance-settlement-agent 정산 승인 게이트 | ⬜ 미실시 |
+| TC-15 | parents 기반 DAG 승격 | ⬜ 미실시 |
+| TC-16 | auto_subscribe_on_create 재개 | ⬜ 미실시 |
+| TC-17 | coordinator 툴셋 회귀 | ⬜ 미실시 |
 
 ## 부록: 테스트 실행 기록
 

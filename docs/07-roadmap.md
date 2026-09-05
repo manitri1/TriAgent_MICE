@@ -26,17 +26,22 @@ Registration, 자체 등록 폼 백엔드) API와 결제 PG(토스페이먼츠, 
 광고 플랫폼 API 연동이 필요합니다. 인증 정보 미보유로 미착수 — 현재는 수동 입력 데이터를
 `code_execution`으로 집계하는 방식으로 대체합니다.
 
-## 3. 위임 메커니즘(`terminal` 동기 호출) 실측 검증
+## 3. 칸반 디스패처 위임 메커니즘 실측 검증
 
-`docs/02-architecture.md`에서 `delegate_task` 대신 `terminal` 동기 호출을 쓰기로 설계
-단계에서 확정했지만, **이 저장소에서는 아직 실제로 구동해본 적이 없습니다.**
-`TriAgent_Planner`의 TC-17~21처럼 실제 `docker compose exec`로 `coordinator`가 5개 하위
-프로필을 순서대로 호출하는 것을 검증해야 합니다.
+`docs/02-architecture.md`는 `delegate_task`도, 초기에 썼던 `terminal` 동기 호출도 아닌
+**칸반 디스패처 자동 spawn**을 위임 메커니즘으로 채택했지만, **이 저장소에서는 아직 실제로
+구동해본 적이 없습니다**(`.hermes/kanban.db`가 배포 시점까지 빈 상태). `kanban_create()` +
+`kanban_link()`로 만든 태스크 그래프가 실제로 디스패처에 의해 자동 spawn되는지, `parents`
+승격이 의도대로 동작하는지, `kanban_block`/`kanban_unblock`이 HITL 게이트를 실제로
+막는지, `auto_subscribe_on_create`가 coordinator 세션을 실제로 재개시키는지를 검증해야
+합니다 — 구체적 절차는 [10-usecase-tests.md](10-usecase-tests.md) Part A(TC-02, TC-05~07).
 
 ## 4. HITL 승인 대화 실측
 
-`docs/06-hitl-approval-design.md`의 3개 게이트는 설계만 되어 있고, 실제 게이트웨이(Telegram
-등) 연결 후 `messaging`/`clarify` 툴셋으로 승인 대화가 의도대로 동작하는지 검증이
+`docs/06-hitl-approval-design.md`의 7개 게이트(예산/최초발송/위기아젠다/결제환불/전시계약/
+캠페인집행/정산지급)는 각각 `kanban_block`/`kanban_unblock` 구현까지 설계돼 있지만, 실제
+게이트웨이(Telegram 등) 연결 후 `messaging`/`clarify` 툴셋으로 승인 대화가 의도대로
+동작하는지, 그리고 `blocked` 태스크가 승인 전까지 디스패처에 의해 재구동되지 않는지 검증이
 필요합니다.
 
 ## 5. 배포 자동화 (완료)
@@ -51,6 +56,9 @@ Registration, 자체 등록 폼 백엔드) API와 결제 PG(토스페이먼츠, 
 
 ## 7. `kanban` 기반 다단계 파이프라인 실행
 
-Pre-Event(제안서→예산→아웃리치) 전체를 `coordinator`가 kanban 카드로 관리하며 순차
-위임·검증하는 것을 처음부터 끝까지 실행하는 시나리오([10-usecase-tests.md](10-usecase-tests.md)
-Part A)는 아직 미실시입니다.
+이전에는 이 항목이 백로그(향후 검토 과제)였지만, 이제는 **현재 설계 자체**입니다 —
+`docs/02-architecture.md`의 위임 메커니즘이 곧 칸반 디스패처 기반 태스크 그래프입니다.
+Pre-Event(제안서→예산/전시/섭외/마케팅/등록 병렬 분기)→On-Event→Post-Event 전체를
+`coordinator`가 `kanban_create`/`kanban_link`로 태스크 그래프를 만들고 디스패처가 자동
+구동·검증하는 것을 처음부터 끝까지 실행하는 시나리오는 **설계는 끝났으나 아직 미검증**입니다
+([10-usecase-tests.md](10-usecase-tests.md) Part A).

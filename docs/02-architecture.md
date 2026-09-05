@@ -7,10 +7,10 @@
                                         │
                                         ▼
                               ┌───────────────────┐
-                              │    coordinator     │  ← 유일한 대화 진입점
+                              │    coordinator     │  ← 유일한 대화 진입점(칸반 오케스트레이터)
                               │  (총괄 코디네이터)   │
                               └─────────┬─────────┘
-                                        │ terminal(hermes -p <role> chat -q "...") 동기 호출
+                                        │ kanban_create()+kanban_link() → 디스패처 자동 spawn
      ┌───────────┬───────────┬─────────┼─────────┬───────────┬────────────┬────────────┐
      ▼           ▼           ▼         ▼         ▼           ▼            ▼            ▼
 proposal-   budget-     exhibition outreach registration marketing  onsite-ops  postevent-  finance-
@@ -19,20 +19,26 @@ agent       vendor-     -agent     -agent   -agent       -agent     -agent      
      │           │           │         │         │           │            │            │            │
      └───────────┴───────────┴─────────┴─────────┴───────────┴────────────┴────────────┴────────────┘
                                         │
-                              산출물 반환 (파일 경로)
+                    kanban_complete(summary=...) — 산출물 경로 포함
+                       (HITL 지점이면 대신 kanban_block(reason=...))
+                                        │
+                                        ▼
+                    auto_subscribe_on_create 이벤트로 coordinator 세션 자동 재개
                                         │
                                         ▼
                               coordinator: Active Verification
                               (파일 직접 열람 / 외부 API 재조회)
                                         │
-                              HITL 게이트 대상이면 ↓
+                              HITL 게이트(blocked)면 ↓
                                         ▼
-                              🛑 기획자 승인 (Slack/Telegram/CLI)
+                    🛑 기획자 승인 (Slack/Telegram/CLI) → kanban_unblock(task_id)
 ```
 
-`coordinator`가 유일한 대화 진입점이며, 나머지 9개는 `coordinator`가 위임할 때만 구동되는
-실행 전문 프로필입니다(총 10개 프로필). 실행 프로필 사이에는 직접적인 프로필 간 호출이
-없습니다 — 모든 조정은 `coordinator`를 거칩니다(중앙집중형 오케스트레이션).
+`coordinator`가 유일한 대화 진입점이며, 나머지 9개는 `coordinator`가 kanban 태스크를
+만들 때 디스패처가 자동으로 구동하는 실행 전문 프로필입니다(총 10개 프로필). 실행
+프로필 사이에는 직접적인 프로필 간 호출이 없습니다 — 모든 조정은 `coordinator`가 만드는
+태스크 그래프(`kanban_create`/`kanban_link`)를 거칩니다(중앙집중형 오케스트레이션, 단
+실제 구동 자체는 디스패처가 비동기로 수행합니다).
 
 ## 왜 외부 파이썬 오케스트레이터를 만들지 않는가
 
@@ -42,30 +48,53 @@ agent       vendor-     -agent     -agent   -agent       -agent     -agent      
 합니다. 이 판단은 `coordinator`의 SOUL.md 원칙(요청을 하위 태스크로 분해 → 담당 프로필
 판단 → 위임 → 검증)으로 유도합니다.
 
-## 위임 메커니즘: `terminal` 동기 호출 (`delegate_task` 아님)
+## 위임 메커니즘: 칸반 디스패처 자동 spawn (`delegate_task`도 `terminal`도 아님)
 
 Hermes Agent에는 서브에이전트 위임용 내장 툴 `delegate_task`가 있지만, 자매 프로젝트
 `TriAgent_Planner`에서 실측한 결과 **`delegate_task`는 대상 프로필의 SOUL.md/USER.md/
 MEMORY.md/skills를 전혀 로드하지 않고, 같은 세션 안에서 이름 없는 범용 서브에이전트를
-띄우는 함정**임이 확인되었습니다(TC-20). 이 프로젝트는 처음부터 이 함정을 피해 다음
-방식을 채택합니다:
+띄우는 함정**임이 확인되었습니다(TC-20). 이 판단은 여전히 유효하며 바뀌지 않습니다.
 
+초기 설계는 이 함정을 피해 `terminal(hermes -p <role> chat -q "...")` 동기 호출을 위임
+메커니즘으로 채택했지만, 실측 결과 이 방식은 근본적인 한계가 있었습니다: coordinator가
+한 번에 하나씩만 순차 호출할 수 있어 실제 병렬 분기(예산/전시/섭외/마케팅/등록)를 흉내만
+낼 수 있고, 하위 프로필의 응답 전문이 그대로 coordinator 컨텍스트에 쌓여 팽창하며, 재기동/
+복구가 전적으로 LLM의 즉흥 판단에 의존했습니다. 또한 "칸반은 트래커일 뿐"이라는 원래
+방침 아래 실제 운영에서는 `kanban_create()` 대신 사람이 손으로 마크다운 카드를 쓰는
+방식으로 흘러갔습니다(`.hermes/kanban.db`의 `tasks` 테이블이 0행이었던 것으로 확인).
+
+현재 설계는 Hermes Agent에 내장된 **진짜 칸반 디스패처**를 씁니다 — `delegate_task`와는
+완전히 다른 메커니즘으로, SOUL.md/USER.md/MEMORY.md/skills를 온전히 로드한 실제
+`hermes -p <role>` 워커 프로세스를 게이트웨이 안에서 자동으로 구동합니다.
+
+```python
+kanban_create(
+    title="...", assignee="<role>",
+    workspace="dir:/opt/data/workspace/<category>/<event-slug>",
+    tenant="<event-slug>", parents=[...], idempotency_key="<event-slug>-<task>",
+)
+kanban_link(parent_id=..., child_id=...)   # 의존관계가 여러 개일 때
 ```
-terminal(command='/opt/hermes/bin/hermes -p <role> chat -q "<위임 내용>"')
-```
 
-- **반드시 동기(foreground)로 실행합니다** — `background=true`로 실행하면 부모 프로세스가
-  자식을 죽이는 문제가 있습니다(`TriAgent_Planner` TC-21에서 확인).
-- 절대경로(`/opt/hermes/bin/hermes`)를 사용합니다 — 컨테이너 내부 `PATH`에 하위 `hermes`
-  호출이 없을 수 있기 때문입니다.
-- `kanban`은 이 위임의 **대체재가 아니라 진행 상황을 사람이 볼 수 있게 병행 기록하는
-  트래커**로만 사용합니다(`docs/kanban-task-templates.md`류 패턴 — 카드 생성 시
-  `assignee`, `workspace`, `priority`, `idempotency_key`를 채웁니다).
+- `parents`로 연결된 태스크는 부모가 전부 `done`이 되어야 `ready`로 승격되고, 이때
+  디스패처(`kanban.dispatch_in_gateway: true`, 게이트웨이 안에서 상시 폴링)가 담당 프로필을
+  자동 spawn합니다. `coordinator`는 `terminal`로 직접 하위 프로필을 호출하지 않습니다.
+- `coordinator`는 태스크 생성 후 동기로 기다리지 않습니다 — `auto_subscribe_on_create`
+  설정으로 담당 태스크가 `done`/`blocked`가 되면 세션이 자동으로 재개됩니다.
+- `tenant`(이벤트 슬러그)로 이벤트 간 데이터 격리에 처음으로 기술적 근거가 생겼습니다 —
+  기존에는 SOUL.md 문구("다른 행사 자료와 섞지 않는다")에만 의존했습니다.
+- HITL 게이트는 워커가 `kanban_complete()` 대신 `kanban_block(reason=...)`을 호출해
+  스스로 멈추고, `coordinator`가 기획자 승인 후에만 `kanban_unblock()`을 호출합니다 —
+  [06-hitl-approval-design.md](06-hitl-approval-design.md) 참고.
 
-> 이 결정은 `TriAgent_Planner`가 겪은 실제 시행착오(delegate_task → 문제 발견 → terminal로
-> 교체 → 재검증)를 이 저장소에서 반복하지 않기 위해 설계 단계에서부터 확정한 것입니다.
-> 다만 **이 저장소 자체에서는 아직 이 방식을 실제로 구동해 재검증하지 않았습니다** —
-> [10-usecase-tests.md](10-usecase-tests.md) Part A 참고.
+> `terminal` 자체는 여전히 coordinator의 툴셋에 남아 있지만(진단용 CLI 호출 등), 위임의
+> 주 경로로는 더 이상 쓰지 않습니다. `delegate_task` 회피 결정은 이 변경과 무관하게
+> 계속 유효합니다.
+>
+> ⚠️ **이 칸반 디스패처 메커니즘은 이 저장소에서 단 한 번도 실행된 적이 없습니다**
+> (`.hermes/kanban.db`가 배포 시점까지 빈 상태였음). 프레임워크 공식 문서를 근거로
+> 설계했으나, 실제 컨테이너에서 스모크 테스트로 검증되기 전까지는 "설계됨"이지 "동작
+> 확인됨"이 아닙니다 — [10-usecase-tests.md](10-usecase-tests.md) Part A 참고.
 
 ## 데이터 흐름 (Pre-Event → On-Event → Post-Event)
 
@@ -111,6 +140,29 @@ postevent-analyst: sentiment_analysis   finance-settlement-agent: postevent_fina
 모든 산출물은 `workspace/{proposals,budget,outreach,registration,exhibition,marketing,
 reports,finance}/<event-name>/` 아래에 누적되며, 진행 상황은 `coordinator`의 `MEMORY.md`와
 `kanban` 카드에서 추적합니다.
+
+### 위 다이어그램의 `kanban_create(parents=...)` 매핑
+
+다이어그램의 화살표는 실제로는 `parents`(또는 `kanban_link()`)로 표현되는 의존관계입니다.
+`rfp_analysis`에서 직접 뻗는 화살표만으로는 부족한 교차 연계(위 "연계" 주석)까지 반영하면:
+
+| 태스크 | assignee | parents |
+|---|---|---|
+| `rfp_analysis` | proposal-agent | (없음 — 루트) |
+| `vendor_quote_comparison` | budget-vendor-agent | `rfp_analysis` |
+| `outreach_cadence` | outreach-agent | `rfp_analysis` |
+| `attendee_registration_management` | registration-agent | `rfp_analysis` |
+| `booth_layout_and_exhibitor_management` | exhibition-agent | `rfp_analysis`, `vendor_quote_comparison`, `outreach_cadence` (예산+섭외 데이터 필요) |
+| `audience_marketing_campaign` | marketing-agent | `rfp_analysis`, `attendee_registration_management` (등록 링크 필요) |
+| `incident_response` | onsite-ops-agent | `attendee_registration_management`(등록자 명단) — 그 외 예산/섭외/전시/마케팅/등록의 HITL 게이트가 전부 `kanban_unblock`된 뒤에만 coordinator가 이 태스크를 생성 |
+| `sentiment_analysis` | postevent-analyst | `incident_response` |
+| `postevent_financial_settlement` | finance-settlement-agent | `incident_response`, `vendor_quote_comparison`, `booth_layout_and_exhibitor_management` |
+
+`sentiment_analysis`와 `postevent_financial_settlement`는 서로를 `parents`에 넣지 않습니다
+(다이어그램의 "병렬 실행 — 서로 의존하지 않음" 그대로). 모든 태스크에 동일한
+`tenant: "<event-slug>"`를 지정해 이벤트 간 데이터가 섞이지 않게 합니다 — 필드 전체 설명은
+`coordinator`의 `skills/orchestration/mice-coordinator-workflow/templates/
+kanban_create_call_reference.md` 참고.
 
 ## 최소 권한 원칙
 

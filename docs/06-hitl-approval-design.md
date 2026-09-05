@@ -2,7 +2,17 @@
 
 Hermes 게이트웨이 내장 `/approve`/`/deny`는 **쉘 명령 승인**용(`approvals.mode`)이며,
 "이 예산안을 확정해도 되는가" 같은 **도메인 특화 승인**과는 다른 메커니즘입니다. 이 문서는
-`coordinator`가 `messaging`/`clarify` 툴셋만으로 도메인 HITL을 구현하는 방법을 정의합니다.
+`coordinator`가 `messaging`/`clarify` 툴셋으로 도메인 HITL 대화를 진행하는 방법과, 그
+대화가 이제 `kanban_block`/`kanban_unblock`이라는 실제 상태 기계로 뒷받침되는 방법을
+함께 정의합니다.
+
+기존에는 이 7개 게이트가 순전히 SOUL.md 프롬프트 규범에만 의존해 "멈춰야 한다"는 것을
+LLM이 스스로 기억해야 했고, 승인 이력도 `coordinator/MEMORY.md`가 비어 있으면 사실상
+남지 않았습니다. 이제 담당 워커가 게이트에 도달하면 `kanban_complete()` 대신
+`kanban_block(reason=...)`을 호출해 태스크 상태 자체를 `blocked`로 만듭니다 — 디스패처는
+`blocked` 태스크를 재시도/재구동하지 않으므로, "승인 없이 다음 단계로 못 넘어간다"는
+원칙이 프롬프트 준수 여부와 무관하게 보드 상태로 강제됩니다. `coordinator`는 기획자의
+명시적 승인을 받은 뒤에만 `kanban_unblock(task_id)`를 호출합니다.
 
 ## 공통 흐름
 
@@ -25,6 +35,10 @@ Hermes 게이트웨이 내장 `/approve`/`/deny`는 **쉘 명령 승인**용(`ap
 - **승인 시:** `budget-vendor-agent`에게 "승인됨" 상태로 전달, 계약 진행은 여전히 기획자가
   수동으로 처리(Cvent 등 외부 계약 시스템 실연동 전까지는 자동 확정 불가 — [07장](07-roadmap.md))
 - **반려 시:** 반려 사유를 `budget-vendor-agent`에게 전달해 재작업 요청
+- **칸반 구현:** `budget-vendor-agent`가 예산안 확정 직전 `kanban_complete()` 대신
+  `kanban_block(reason="<예산 상한/벤더 견적/초과 항목/시트 경로>")` 호출.
+  `coordinator`는 기획자 승인 후에만 `kanban_unblock(task_id)` 호출, 반려 시
+  `kanban_comment()`로 사유 기록 후 재작업 요청.
 
 ### 게이트 2 — 연사/스폰서 최초 발송
 
@@ -33,6 +47,9 @@ Hermes 게이트웨이 내장 `/approve`/`/deny`는 **쉘 명령 승인**용(`ap
 - **승인 시:** 메일 발송(발송 도구 실연동 전까지는 "승인됨, 수동 발송 안내"로 응답)
 - **반려 시:** 반려 사유를 `outreach-agent`에게 전달해 문구 재작성 요청
 - 후속 팔로우업(72시간 규칙 내)은 최초 발송이 승인된 뒤에는 매번 재승인 없이 자동 진행
+- **칸반 구현:** `outreach-agent`가 특정 대상에게 보내는 *최초* 메일 직전
+  `kanban_block(reason="<수신자/제목/본문 전문/인용 근거>")` 호출(72시간 내 팔로우업은
+  재차단하지 않음 — 기존 규칙 불변). `coordinator`는 승인 후에만 `kanban_unblock()`.
 
 ### 게이트 3 — 위기 우회 아젠다 적용
 
@@ -43,6 +60,9 @@ Hermes 게이트웨이 내장 `/approve`/`/deny`는 **쉘 명령 승인**용(`ap
 - **반려 시:** 다른 대안을 다시 제시하도록 요청
 - **예외:** 인명·안전에 직결되는 즉각 대응은 최소 조치를 먼저 취하고 사후 즉시 보고 —
   이 경우에도 사후 보고는 반드시 이 게이트를 통해 기록한다
+- **칸반 구현:** `onsite-ops-agent`가 우회 아젠다 공지 직전 `kanban_block(reason="<돌발
+  상황/재확인 결과/대안 시나리오 비교>")` 호출. 인명·안전 예외 시엔 최소 조치 실행 후
+  즉시 `kanban_block()`으로 사후 기록. `coordinator`는 승인 후에만 `kanban_unblock()`.
 
 ### 게이트 4 — 참가자 결제/환불 처리
 
@@ -51,6 +71,8 @@ Hermes 게이트웨이 내장 `/approve`/`/deny`는 **쉘 명령 승인**용(`ap
 - **승인 시:** "승인됨, 수동 처리 안내"로 응답(결제 PG 실연동 전까지는 자동 처리 불가 —
   [07장](07-roadmap.md))
 - **반려 시:** 반려 사유를 `registration-agent`에게 전달해 재확인 요청
+- **칸반 구현:** `registration-agent`가 결제/환불 확정 직전 `kanban_block(reason="<대상
+  참가자/금액/사유/DB 상태>")` 호출. `coordinator`는 승인 후에만 `kanban_unblock()`.
 
 ### 게이트 5 — 전시 부스 계약 확정
 
@@ -59,6 +81,9 @@ Hermes 게이트웨이 내장 `/approve`/`/deny`는 **쉘 명령 승인**용(`ap
   결과, 배치도 파일 경로
 - **승인 시:** 계약 확정("승인됨, 수동 계약 체결 안내")
 - **반려 시:** 배치 재조정 또는 조건 재협상을 `exhibition-agent`에게 요청
+- **칸반 구현:** `exhibition-agent`가 부스 계약 확정 직전 `kanban_block(reason="<업체명/
+  위치·크기/조건/안전 규정 점검 결과/배치도 경로>")` 호출. `coordinator`는 승인 후에만
+  `kanban_unblock()`.
 
 ### 게이트 6 — 유료 광고/대량 홍보 캠페인 집행
 
@@ -67,6 +92,8 @@ Hermes 게이트웨이 내장 `/approve`/`/deny`는 **쉘 명령 승인**용(`ap
 - **승인 요청 메시지 구성:** 캠페인 채널, 예산(유료 광고 시), 대상 규모, 콘텐츠 전문
 - **승인 시:** 캠페인 집행 진행
 - **반려 시:** 콘텐츠·예산 재조정 요청
+- **칸반 구현:** `marketing-agent`가 유료 집행/대량 발송 직전 `kanban_block(reason="<채널/
+  예산/대상 규모/콘텐츠 전문>")` 호출. `coordinator`는 승인 후에만 `kanban_unblock()`.
 
 ### 게이트 7 — 사후 정산 확정 및 대금 지급
 
@@ -76,6 +103,9 @@ Hermes 게이트웨이 내장 `/approve`/`/deny`는 **쉘 명령 승인**용(`ap
   미지급/분쟁 항목, 인보이스 근거
 - **승인 시:** "승인됨, 수동 지급 처리 안내"로 응답
 - **반려 시:** 정산 내역 재검토 요청
+- **칸반 구현:** `finance-settlement-agent`가 최종 정산/지급 확정 직전
+  `kanban_block(reason="<예산 대비 실제 차이/업체별 지급 내역/인보이스 근거>")` 호출.
+  `coordinator`는 승인 후에만 `kanban_unblock()`.
 
 ## 대화 프로토콜 (공통)
 
@@ -83,7 +113,9 @@ Hermes 게이트웨이 내장 `/approve`/`/deny`는 **쉘 명령 승인**용(`ap
    핵심 정보 전문을 포함).
 2. `clarify` 응답을 기다리는 동안 같은 대상에 대한 다른 작업을 병행하지 않는다.
 3. 모호한 응답("나중에", "글쎄")은 승인도 반려도 아니다 — 다시 구체적으로 확인한다.
-4. 모든 승인/반려는 날짜와 함께 `coordinator/MEMORY.md`에 기록한다.
+4. 모든 승인/반려는 날짜와 함께 `coordinator/MEMORY.md`에도 기록한다 — 단, 1차 근거는
+   해당 태스크의 `kanban_block`/`kanban_unblock` 타임스탬프와 `kanban_comment` 이력이다.
+   MEMORY.md가 비어 있더라도 보드에서 승인 이력을 재구성할 수 있어야 한다.
 
 > 게이트웨이의 `/approve`·`/deny`(`approvals.mode`)와 이 앱 레벨 메시징 기반 승인을 혼동하지
 > 않습니다 — 전자는 쉘 명령 실행 승인이고, 후자는 이 문서가 정의하는 도메인 승인입니다.

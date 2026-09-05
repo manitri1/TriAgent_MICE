@@ -266,6 +266,12 @@ docker compose exec hermes ls -la /opt/data   # bind mount(.hermes/)가 제대�
    런타임 데이터(`state.db`, `workspace/` 등)는 `.hermes/` bind mount에 남아 있으므로 배포로
    지워지지 않습니다.
 
+   > `config.yaml`(루트 또는 `profiles/<role>/config.yaml`)만 바뀐 경우는 `docker compose
+   > build`가 필요 없습니다 — `.hermes/`는 이미지가 아니라 bind mount이므로
+   > `docker compose restart hermes`(또는 `up -d`)만으로 디스패처를 포함한 게이트웨이가
+   > 새 설정을 읽습니다. 예: `kanban:` 블록 추가 후 디스패처가 이를 인식하게 하려면 재시작이
+   > 필요합니다.
+
 5. **(선택) 배포 스크립트**: 4번 단계를 매번 손으로 치기 번거로우면 VPS에 짧은 스크립트를 하나
    둘 수 있습니다.
 
